@@ -46,6 +46,6 @@ app.post("/scrape", function(req, res) {
 
 
 
-app.listen(3000, function(){
+app.listen(process.env.PORT, process.env.IP, function(){
     console.log("Now serving your app on PORT 3000");
 });
