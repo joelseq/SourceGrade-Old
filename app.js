@@ -80,8 +80,6 @@ app.post("/scrape", function(req, res) {
                             var table = $(this);
                             //Get the first row of that table
                             var row = table.children().first();
-                            //Boolean to check if ID was found
-                            var idFound = "false";
                             //Loop through all the rows to find the row containing the ID
                             for(var i = 0; i < table.children().length; i++){
                                 if(row.children().first().text() === id){
@@ -97,17 +95,14 @@ app.post("/scrape", function(req, res) {
                                             points = td.text();
                                             td = td.next();
                                             score = td.text();
-                                            idFound = "true";
-                                            var returnVar = {ra: rank, po: points, sc: score};
-                                            grade = returnVar;
+                                            grade = {ra: rank, po: points, sc: score};
                                             return;
                                         } else {
                                             console.log("Else statement entered");
                                             rank = td.text();
                                             td = td.next();
                                             score = td.text();
-                                            var returnVar = {ra: rank, sc: score};
-                                            grade = returnVar;
+                                            grade = {ra: rank, sc: score};
                                             return;
                                         }
                                     }); /* end of filter */
