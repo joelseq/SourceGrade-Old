@@ -61,7 +61,6 @@ app.post("/scrape", function(req, res) {
                 anchors.each(function(i, elem){
                    var ahref = $(this).attr("href");
                    var catUrl = baseUrl + ahref;
-                   console.log(catUrl);
                    var categoryName = $(this).text();
                    var grade = new Object();
                    request(url, function(error,response,html){
@@ -95,39 +94,36 @@ app.post("/scrape", function(req, res) {
                                             points = td.text();
                                             td = td.next();
                                             score = td.text();
-                                            grade = {ra: rank, po: points, sc: score};
+                                            grade.rank = rank;
+                                            grade.points = points;
+                                            grade.score = score;
                                             return;
                                         } else {
                                             console.log("Else statement entered");
                                             rank = td.text();
                                             td = td.next();
                                             score = td.text();
-                                            grade = {ra: rank, sc: score};
+                                            grade.rank = rank;
+                                            grade.score = score;
                                             return;
                                         }
                                     }); /* end of filter */
-                                } else if(row.next() !== undefined) {
-                                    row = row.next();
                                 } else {
-                                    console.log("id not found");   
+                                    row = row.next();
                                 }
                             } /* end of for loop */
                         }); /* end of filter */
-                    }
+                    } /* end of else */
                 }); /* end of request */
     
-    
-    
-    
-                   console.log(grade);
                    if(grade.length === 3) {
-                    toReturn = "For " + categoryName + " you got rank " + grade.ra + 
+                    toReturn += "For " + categoryName + " you got rank " + grade.ra + 
                                 " with " + grade.po + " points and a score of " + grade.sc + "\n";
                    } else {
-                       toReturn = "For " + categoryName + " you got rank " + grade.ra + 
+                       toReturn += "For " + categoryName + " you got rank " + grade.ra + 
                                   " with a score of " + grade.sc + "\n";
                    }
-                });
+                }); /* end of for each */
             
           }); /* end of filter */
           
