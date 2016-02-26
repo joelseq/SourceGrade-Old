@@ -30,10 +30,8 @@ app.post("/scrape", function(req, res) {
    var id = req.body.sourceid;
    url = req.body.sourceurl;
    
-   var hyperlinks = [];
-   var categories = [];
-   var toReturn;
-   
+   //Array of grade objects
+   var grades = [];
    
    /* This will be the first request */
    request(url, function(error, response, html){
@@ -66,19 +64,21 @@ app.post("/scrape", function(req, res) {
                 anchors.each(function(i, elem){
                    var ahref = $(this).attr("href");
                    var catUrl = baseUrl + ahref;
-                   hyperlinks.push(catUrl);
-                   var categoryName = $(this).text();
-                   categories.push(categoryName);
+                   var grade = {
+                       name: $(this).text(),
+                       url: catUrl,
+                       rank: "",
+                       points: "",
+                       score: ""
+                   };
+                   grades.push(grade);
                 }); /* end of for each */
             
           }); /* end of filter */
           
           
-          async.each(hyperlinks, function(hyperlink, done){
-              request(hyperlink, function(error, response, html){
-                    var rank;
-                    var points;
-                    var score;
+          async.each(grades, function(grade, done){
+              request(grade.url, function(error, response, html){
                     if(error){
                         console.log(error);
                     } else {
@@ -98,15 +98,15 @@ app.post("/scrape", function(req, res) {
                                         var tds = $(this);
                                         var td = tds.first();
                                         if(tds.length === 3){
-                                            rank = td.text();
+                                            grade.rank = td.text();
                                             td = td.next();
-                                            points = td.text();
+                                            grade.points = td.text();
                                             td = td.next();
-                                            score = td.text();
+                                            grade.score = td.text();
                                         } else {
-                                            rank = td.text();
+                                            grade.rank = td.text();
                                             td = td.next();
-                                            score = td.text();
+                                            grade.score = td.text();
                                         }
                                     }); /* end of filter */
                                     break;
@@ -115,36 +115,31 @@ app.post("/scrape", function(req, res) {
                                 }
                             } /* end of for loop */
                             
-                           if(points != undefined) {
-                                toReturn += "For " + hyperlink + " you got rank " + rank + 
-                                            " with " + points + " points and a score of " + score + "\n";
-                           } else {
-                                toReturn += "For " + hyperlink + " you got rank " + rank + 
-                                            " with a score of " + score + "\n";
-                           }
-                            
                             
                         }); /* end of filter */
                         
                         
                     } /* end of else */
-                 
-                 rank = undefined;
-                 points = undefined;
-                 score = undefined;
-                 
                  done(); 
-              });
+              }); /* end of request */
           }, function(err){
-              console.log("Done parsing grades");
-              res.send(toReturn);
-              console.log(toReturn);
+              if(err){
+                  console.log(err);
+              } else {
+                  console.log("Done parsing grades");
+                  res.render("scrape",{grades: grades});
+              }
           });
           
-      }
+      } /* end of gigantic else */
+      
    }); /* end of request */
    
 }); /* end of /scrape route */
+
+app.get("*", function(req,res) {
+   res.send("The page you are looking for doesn't exist"); 
+});
 
 
 
