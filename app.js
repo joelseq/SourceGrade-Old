@@ -65,9 +65,7 @@ app.post("/scrape", function(req, res) {
                 //For each anchor get the href
                 anchors.each(function(i, elem){
                    var ahref = $(this).attr("href");
-                   console.log(ahref);
                    var catUrl = baseUrl + ahref;
-                   console.log(catUrl);
                    hyperlinks.push(catUrl);
                    var categoryName = $(this).text();
                    categories.push(categoryName);
@@ -75,18 +73,16 @@ app.post("/scrape", function(req, res) {
             
           }); /* end of filter */
           
+          
           async.each(hyperlinks, function(hyperlink, done){
               request(hyperlink, function(error, response, html){
+                    var rank;
+                    var points;
+                    var score;
                     if(error){
                         console.log(error);
                     } else {
                         var $ = cheerio.load(html);
-                        
-                        var rank; //user's rank
-                        var points; //user's points
-                        var score; //user's score (percentage)
-                        
-                        var grade = new Object(); //Object that will hold grade information
                         
                         //Filter out the table containing the scores
                         $('table').attr('cellpadding', '3').filter(function(){
@@ -97,135 +93,56 @@ app.post("/scrape", function(req, res) {
                             //Loop through all the rows to find the row containing the ID
                             for(var i = 0; i < table.children().length; i++){
                                 if(row.children().first().text() === id){
-                                    console.log("ID found");
-                                    $('row').children().attr('bgcolor', '#FFFFD0').filter(function(){
+                                    row.children('td').attr('bgcolor', '#FFFFD0').filter(function(){
                                         //Get the NodeList of the children
                                         var tds = $(this);
-                                        var td = tds.children().first();
+                                        var td = tds.first();
                                         if(tds.length === 3){
-                                            console.log("If statement entered");
                                             rank = td.text();
                                             td = td.next();
                                             points = td.text();
                                             td = td.next();
                                             score = td.text();
-                                            grade.rank = rank;
-                                            grade.points = points;
-                                            grade.score = score;
-                                            return;
                                         } else {
-                                            console.log("Else statement entered");
                                             rank = td.text();
                                             td = td.next();
                                             score = td.text();
-                                            grade.rank = rank;
-                                            grade.score = score;
-                                            return;
                                         }
                                     }); /* end of filter */
+                                    break;
                                 } else {
                                     row = row.next();
                                 }
                             } /* end of for loop */
                             
-            
-                           if(grade.length === 3) {
-                                toReturn += "For " + categories[i] + " you got rank " + grade.rank + 
-                                            " with " + grade.points + " points and a score of " + grade.score + "\n";
+                           if(points != undefined) {
+                                toReturn += "For " + hyperlink + " you got rank " + rank + 
+                                            " with " + points + " points and a score of " + score + "\n";
                            } else {
-                                toReturn += "For " + categories[i] + " you got rank " + grade.rank + 
-                                            " with a score of " + grade.score + "\n";
+                                toReturn += "For " + hyperlink + " you got rank " + rank + 
+                                            " with a score of " + score + "\n";
                            }
                             
                             
                         }); /* end of filter */
+                        
+                        
                     } /* end of else */
                  
-                 
+                 rank = undefined;
+                 points = undefined;
+                 score = undefined;
                  
                  done(); 
               });
           }, function(err){
               console.log("Done parsing grades");
+              res.send(toReturn);
+              console.log(toReturn);
           });
           
       }
    }); /* end of request */
-   
-   
-//   /* This will be the second stage of requests */
-//   for(var i = 0; i < hyperlinks.length; i++) {
-//       console.log("enterered the second for loop");
-//       request(hyperlinks[i], function(error,response,html){
-//             console.log("entered the second stage of requests");
-//             if(error){
-//                 console.log(error);
-//             } else {
-//                 var $ = cheerio.load(html);
-                
-//                 var rank; //user's rank
-//                 var points; //user's points
-//                 var score; //user's score (percentage)
-                
-//                 var grade = new Object(); //Object that will hold grade information
-                
-//                 //Filter out the table containing the scores
-//                 $('table').attr('cellpadding', '3').filter(function(){
-//                     //Set this as table
-//                     var table = $(this);
-//                     //Get the first row of that table
-//                     var row = table.children().first();
-//                     //Loop through all the rows to find the row containing the ID
-//                     for(var i = 0; i < table.children().length; i++){
-//                         if(row.children().first().text() === id){
-//                             console.log("ID found");
-//                             $('row').children().attr('bgcolor', '#FFFFD0').filter(function(){
-//                                 //Get the NodeList of the children
-//                                 var tds = $(this);
-//                                 var td = tds.children().first();
-//                                 if(tds.length === 3){
-//                                     console.log("If statement entered");
-//                                     rank = td.text();
-//                                     td = td.next();
-//                                     points = td.text();
-//                                     td = td.next();
-//                                     score = td.text();
-//                                     grade.rank = rank;
-//                                     grade.points = points;
-//                                     grade.score = score;
-//                                     return;
-//                                 } else {
-//                                     console.log("Else statement entered");
-//                                     rank = td.text();
-//                                     td = td.next();
-//                                     score = td.text();
-//                                     grade.rank = rank;
-//                                     grade.score = score;
-//                                     return;
-//                                 }
-//                             }); /* end of filter */
-//                         } else {
-//                             row = row.next();
-//                         }
-//                     } /* end of for loop */
-                    
-    
-//                   if(grade.length === 3) {
-//                         toReturn += "For " + categories[i] + " you got rank " + grade.rank + 
-//                                     " with " + grade.points + " points and a score of " + grade.score + "\n";
-//                   } else {
-//                         toReturn += "For " + categories[i] + " you got rank " + grade.rank + 
-//                                     " with a score of " + grade.score + "\n";
-//                   }
-                    
-                    
-//                 }); /* end of filter */
-//             } /* end of else */
-//         }); /* end of request */
-//   } /* end of for loop */
-   
-  res.send(toReturn);
-  console.log(toReturn);
    
 }); /* end of /scrape route */
 
