@@ -11,7 +11,11 @@ All you have to do is:
 
 1) Enter your course id and course main page (ending in index.html)
 
+![enter info](https://github.com/joelseq/SourceGrade/blob/master/img/screen1.png)
+
 2) View your grades
+
+![view grades](https://raw.githubusercontent.com/joelseq/SourceGrade/master/img/screen2.png)
 
 ## Contributing
 
