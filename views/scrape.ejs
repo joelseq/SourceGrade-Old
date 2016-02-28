@@ -1,15 +1,16 @@
 <% include partials/header %>
-<h1>GRADES!!!</h1>
-
-<% grades.forEach(function(grade){ %>
-    <div class="grade" style="margin: 50px auto;">
-        <h3>For class <%= grade.name %>:</h3>
-        <p>You got a rank of: grade.rank</p>
-        <% if(grade.points != undefined) {%>
-            <p>You got <%= grade.points %> points</p>
-        <% } %>
-        <p>You got a score of: grade.score</p>
-    </div>
-<% }); %>
+<div class="container">    
+    <h1>GRADES!!!</h1>
     
+    <% grades.forEach(function(grade){ %>
+        <div class="row grade" style="width: 50%; margin: 50px auto;">
+            <h3>For <%= grade.name %>:</h3>
+            <p>You got a rank of: <%= grade.rank %></p>
+            <% if(grade.points != undefined) { %>
+             <p>You got <%= grade.points %> points</p>
+             <% } %>
+            <p>You got a score of: <%= grade.score %></p>
+        </div>
+    <% }); %>
+</div>
 <% include partials/footer %>

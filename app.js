@@ -1,6 +1,6 @@
 /*Required variables*/
 var async = require("async"); //To make asynchronous requests
-var express = require("express"); //MVP
+var express = require("express"); //The main man
 var cheerio = require("cheerio"); //To select HTML elements
 var request = require("request"); //To get the url passed in by the user and turn it into html
 var bodyParser = require("body-parser"); //To get post information
@@ -51,7 +51,7 @@ app.post("/scrape", function(req, res) {
                 table = $(this);
           });
           
-          //Ridiculously specific selector to get the right a tags
+          //Filter out the table to reach the anchor tags
           table.filter(function(){
                 var table = $(this);
                 //Get the tr containing the td we need
@@ -64,6 +64,7 @@ app.post("/scrape", function(req, res) {
                 anchors.each(function(i, elem){
                    var ahref = $(this).attr("href");
                    var catUrl = baseUrl + ahref;
+                   //Create grade object for that specific anchor
                    var grade = {
                        name: $(this).text(),
                        url: catUrl,
@@ -76,7 +77,7 @@ app.post("/scrape", function(req, res) {
             
           }); /* end of filter */
           
-          
+          //Make an asynchronous request for each url
           async.each(grades, function(grade, done){
               request(grade.url, function(error, response, html){
                     if(error){
@@ -93,23 +94,45 @@ app.post("/scrape", function(req, res) {
                             //Loop through all the rows to find the row containing the ID
                             for(var i = 0; i < table.children().length; i++){
                                 if(row.children().first().text() === id){
-                                    row.children('td').attr('bgcolor', '#FFFFD0').filter(function(){
-                                        //Get the NodeList of the children
-                                        var tds = $(this);
-                                        var td = tds.first();
-                                        if(tds.length === 3){
-                                            grade.rank = td.text();
-                                            td = td.next();
-                                            grade.points = td.text();
-                                            td = td.next();
-                                            grade.score = td.text();
-                                        } else {
-                                            grade.rank = td.text();
-                                            td = td.next();
-                                            grade.score = td.text();
+                                    var items = [];
+                                    var child = row.children().first();
+                                    for(var j = 0; j < row.children().length; j++) {
+                                        if(child.attr('bgcolor','#FFFFD0') == true) {
+                                            items.push(child.text());
+                                            console.log("Item being pushed is " + child.text());
                                         }
-                                    }); /* end of filter */
+                                        child = child.next();
+                                    }
+                                    if(items.length === 3) {
+                                        grade.rank = items[0];
+                                        grade.points = items[1];
+                                        grade.score = items[2];
+                                    } else {
+                                        grade.rank = items[0];
+                                        grade.score = items[1];
+                                    }
+                                    // var main = row.children().first();
+                                    // //Get the NodeList of the children
+                                    // main.siblings().filter(function(){
+                                    //     var tds = $(this).attr('bgcolor','#FFFFD0');
+                                    //     //If 3 then one td is for points
+                                    //     if(tds.length === 3){
+                                    //         var td = tds.first();
+                                    //         grade.rank = td.text();
+                                    //         td = td.next();
+                                    //         grade.points = td.text();
+                                    //         td = td.next();
+                                    //         grade.score = td.text();
+                                    //     } else { //Else only rank and score
+                                    //         var td = tds.first();
+                                    //         grade.rank = td.text();
+                                    //         td = td.next();
+                                    //         grade.score = td.text();
+                                    //     }
+                                    // });
+                                    //Exit out of loop
                                     break;
+                                    
                                 } else {
                                     row = row.next();
                                 }
