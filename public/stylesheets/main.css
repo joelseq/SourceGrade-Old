@@ -1,0 +1,37 @@
+html, body {
+    width: 100%;
+    background: #01A7C2;
+    color: white;
+    font-family: Helvetica;
+}
+
+#head {
+    color: white;
+    font: 36px "Pacifico";
+}
+
+
+#grade-container {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#error {
+    width: 50%;
+    margin: 200px auto;
+}
+
+#grade-container .thumbnail {
+    height: 200px;
+    background: #FFFFFF;
+    color: black;
+    font-family: "Open Sans";
+    font-size: 15px;
+}
+
+#main-form {
+    width: 50%;
+    text-align: center;
+    margin: 25px auto;
+}
