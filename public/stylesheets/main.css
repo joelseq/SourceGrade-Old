@@ -10,6 +10,10 @@ html, body {
     font: 36px "Pacifico";
 }
 
+.form-group {
+    min-width: 200px;
+}
+
 
 #grade-container {
     margin-top: 15px;
@@ -32,6 +36,7 @@ html, body {
 
 #main-form {
     width: 50%;
+    min-width: 200px;
     text-align: center;
     margin: 25px auto;
 }
