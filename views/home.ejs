@@ -14,6 +14,15 @@
             <button class="btn btn-primary btn-large btn-block">Submit</button>
         </div>
     </form>
-</div>    
+</div>
+
+<script>
+    var url = or window.location.href;
+    var captured = /CSE110URL=([^&]+)/.exec(url)[1]; // Value is in [1], true or false
+    var result = captured ? captured : 'Gradesource overall course URL';
+    
+    //Fill form with result
+    document.getElementById('userurl').value = result;
+</script>
     
 <% include partials/footer %>
