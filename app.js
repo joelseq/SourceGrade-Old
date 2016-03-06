@@ -26,6 +26,7 @@ app.get("/", function(req,res) {
    res.render("home");
 });
 
+
 /* Post route that scrapes the data of the grades */
 app.post("/scrape", function(req, res) {
 
