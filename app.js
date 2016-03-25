@@ -44,6 +44,9 @@ app.post("/scrape", function(req, res) {
    //Array of async functions
    var asyncTasks = [];
    
+   //Boolean for if id is found
+   var idFound = false;
+   
    /* This will be the first request */
    request(url, function(error, response, html){
       if(error) {
@@ -194,17 +197,65 @@ app.post("/scrape", function(req, res) {
                             var table = $(this);
                             //Get the first row of that table
                             var row = table.children().first();
+                            //Keep track of the number of categories
+                            var categories = row.children.length() - 2;
+                            //Start from the 3rd td in that row
                             var td = row.children.first().next().next();
                             
                             //Loop through the entire row, store the info of
                             //each td
-                            for(var i = 2; i < row.children.length; i++) {
+                            for(var i = 0; i < categories; i++) {
+                                //Create the grade object and push it to the
+                                //csGrades array
                                 var grade = {
                                     name: td.text(),
                                     colspan: td.attr('colspan')
                                 }
                                 csGrades.push(grade);
                                 td = td.next();
+                            }
+                            
+                            //Variable for row with target id
+                            var targetRow = row;
+                            
+                            //Find row with target id
+                            for(i = 0; i < table.children().length; i++) {
+                                if(targetRow.children().first().text() === id){
+                                    idFound = true;
+                                    break;
+                                } else {
+                                    targetRow = targetRow.next();
+                                }
+                            }
+                            
+                            //Get the second row of that table
+                            row = row.next();
+                            //Get row containing limits
+                            var limitsRow = row.next();
+                            
+                            //Td holding the property name
+                            td = row.children().first().next().next();
+                            //Tds holding property value
+                            var targetTd = targetRow.children().first().next().next();
+                            var limitTd = limitsRow.children().first().next().next();
+                            
+                            //Variables used to get the properties for each grade
+                            var j = 0;
+                            var count = parseInt(csGrades[0].colspan, 10);
+                            
+                            //Loop through the row getting the properties
+                            for(i = 0; i < row.children.length - 2; i++) {
+                                if(count == 0) {
+                                    j++;
+                                    count = parseInt(csGrades[j].colspan, 10);
+                                }
+                                var propName = td.text();
+                                var propValue = targetTd.text();
+                                if(limitTd.text() != "&nbsp;") {
+                                    propValue+= " / " + limitTd.text();
+                                }
+                                csGrades[j][propName] = propValue;
+                                count--;
                             }
                             
                         }); /* end of filter */
@@ -229,8 +280,70 @@ app.post("/scrape", function(req, res) {
                             var table = $(this);
                             //Get the first row of that table
                             var row = table.children().first();
-                        });
-                    }
+                            //Keep track of the number of categories
+                            var categories = row.children.length() - 2;
+                            //Start from the 3rd td in that row
+                            var td = row.children.first().next().next();
+                            
+                            //Loop through the entire row, store the info of
+                            //each td
+                            for(var i = 0; i < categories; i++) {
+                                //Create the grade object and push it to the
+                                //csGrades array
+                                var grade = {
+                                    name: td.text(),
+                                    colspan: td.attr('colspan')
+                                }
+                                asGrades.push(grade);
+                                td = td.next();
+                            }
+                            
+                            //Variable for row with target id
+                            var targetRow = row;
+                            
+                            //Find row with target id
+                            for(i = 0; i < table.children().length; i++) {
+                                if(targetRow.children().first().text() === id){
+                                    idFound = true;
+                                    break;
+                                } else {
+                                    targetRow = targetRow.next();
+                                }
+                            }
+                            
+                            //Get the second row of that table
+                            row = row.next();
+                            //Get row containing limits
+                            var limitsRow = row.next();
+                            
+                            //Td holding the property name
+                            td = row.children().first().next().next();
+                            //Tds holding property value
+                            var targetTd = targetRow.children().first().next().next();
+                            var limitTd = limitsRow.children().first().next().next();
+                            
+                            //Variables used to get the properties for each grade
+                            var j = 0;
+                            var count = parseInt(asGrades[0].colspan, 10);
+                            
+                            //Loop through the row getting the properties
+                            for(i = 0; i < row.children.length - 2; i++) {
+                                if(count == 0) {
+                                    j++;
+                                    count = parseInt(asGrades[j].colspan, 10);
+                                }
+                                var propName = td.text();
+                                var propValue = targetTd.text();
+                                if(limitTd.text() != "&nbsp;") {
+                                    propValue+= " / " + limitTd.text();
+                                }
+                                asGrades[j][propName] = propValue;
+                                count--;
+                            }
+                            
+                        }); /* end of filter */
+                        
+                    } /* end of else */
                 });
             });
               
@@ -242,6 +355,7 @@ app.post("/scrape", function(req, res) {
               } else {
                   // All tasks are done now
                   console.log("Done parsing grades");
+                  grades = csGrades.concat(asGrades);
                   res.render("scrape",{grades: grades});   
               }
             });
