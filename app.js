@@ -82,7 +82,6 @@ app.post("/scrape", function(req, res) {
                     var anchors = td.find("a");
                     
                     /* Get one assessment anchor */
-                    
                     var anchor;
     
                     anchors.each(function(i, elem){
