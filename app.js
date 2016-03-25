@@ -84,7 +84,6 @@ app.post("/scrape", function(req, res) {
                     /* Get one assessment anchor */
                     
                     var anchor;
-                    var ahref;
     
                     anchors.each(function(i, elem){
                         var ahref = $(this).attr("href");
@@ -182,7 +181,6 @@ app.post("/scrape", function(req, res) {
                 
               }); /* end of filter */
               
-              
             //Add the request for the categories url
             asyncTasks.push(function(done){
                 request(urls[0], function(error,response,html){
@@ -196,11 +194,13 @@ app.post("/scrape", function(req, res) {
                             //Set this as table
                             var table = $(this);
                             //Get the first row of that table
-                            var row = table.children().first();
+                            var row = table.children().first().next();
+                            console.log("" + row);
+                            console.log("The number of children of the row is: " + row.children().length);
                             //Keep track of the number of categories
-                            var categories = row.children.length() - 2;
+                            var categories = row.children().length - 2;
                             //Start from the 3rd td in that row
-                            var td = row.children.first().next().next();
+                            var td = row.children().first().next().next();
                             
                             //Loop through the entire row, store the info of
                             //each td
@@ -214,6 +214,8 @@ app.post("/scrape", function(req, res) {
                                 csGrades.push(grade);
                                 td = td.next();
                             }
+                            
+                            console.log(csGrades);
                             
                             //Variable for row with target id
                             var targetRow = row;
@@ -261,10 +263,13 @@ app.post("/scrape", function(req, res) {
                         }); /* end of filter */
                         
                     } /* end of else */
-                    
-                }); /* end of request */
-                
-            }); /* end of push */
+                    done();
+                  }, function(err){
+                          if(err){
+                              console.log(err);
+                          }
+                });
+            });
             
             //Add the request to the assessments url
             asyncTasks.push(function(done){
@@ -279,11 +284,11 @@ app.post("/scrape", function(req, res) {
                             //Set this as table
                             var table = $(this);
                             //Get the first row of that table
-                            var row = table.children().first();
+                            var row = table.children().first().next();
                             //Keep track of the number of categories
-                            var categories = row.children.length() - 2;
+                            var categories = row.children().length - 2;
                             //Start from the 3rd td in that row
-                            var td = row.children.first().next().next();
+                            var td = row.children().first().next().next();
                             
                             //Loop through the entire row, store the info of
                             //each td
@@ -344,8 +349,16 @@ app.post("/scrape", function(req, res) {
                         }); /* end of filter */
                         
                     } /* end of else */
+                    done();
+                  }, function(err){
+                          if(err){
+                              console.log(err);
+                          }
                 });
             });
+              
+              
+
               
             // Now we have an array of functions doing async tasks
             // Execute all async tasks in the asyncTasks array
