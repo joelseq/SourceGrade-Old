@@ -180,6 +180,7 @@ app.post("/scrape", function(req, res) {
                 
               }); /* end of filter */
               
+            
             //Add the request for the categories url
             asyncTasks.push(function(done){
                 request(urls[0], function(error,response,html){
@@ -193,7 +194,7 @@ app.post("/scrape", function(req, res) {
                             //Set this as table
                             var table = $(this);
                             //Get the first row of that table
-                            var row = table.children().first().next();
+                            var row = table.children().first();
                             console.log("" + row);
                             console.log("The number of children of the row is: " + row.children().length);
                             //Keep track of the number of categories
@@ -209,12 +210,10 @@ app.post("/scrape", function(req, res) {
                                 var grade = {
                                     name: td.text(),
                                     colspan: td.attr('colspan')
-                                }
+                                };
                                 csGrades.push(grade);
                                 td = td.next();
                             }
-                            
-                            console.log(csGrades);
                             
                             //Variable for row with target id
                             var targetRow = row;
@@ -283,7 +282,7 @@ app.post("/scrape", function(req, res) {
                             //Set this as table
                             var table = $(this);
                             //Get the first row of that table
-                            var row = table.children().first().next();
+                            var row = table.children().first();
                             //Keep track of the number of categories
                             var categories = row.children().length - 2;
                             //Start from the 3rd td in that row
@@ -297,7 +296,7 @@ app.post("/scrape", function(req, res) {
                                 var grade = {
                                     name: td.text(),
                                     colspan: td.attr('colspan')
-                                }
+                                };
                                 asGrades.push(grade);
                                 td = td.next();
                             }
