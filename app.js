@@ -114,8 +114,6 @@ app.post("/scrape", function(req, res) {
                         });
                         
                         table.filter(function(){
-                            //Set this as table
-                            var table = $(this);
                             //Get the first row of that table
                             var row = table.children().first();
                             //Keep track of the number of categories
@@ -129,8 +127,8 @@ app.post("/scrape", function(req, res) {
                                 //Create the grade object and push it to the
                                 //csGrades array
                                 var grade = {
-                                    name: td.text(),
-                                    colspan: td.attr('colspan')
+                                    colspan: td.attr('colspan'),
+                                    name: td.text()
                                 };
                                 csGrades.push(grade);
                                 td = td.next();
@@ -154,6 +152,8 @@ app.post("/scrape", function(req, res) {
                             //Get row containing limits
                             var limitsRow = row.next();
                             
+                            var columns = row.children().length - 2;
+                            
                             //Td holding the property name
                             td = row.children().first().next().next();
                             //Tds holding property value
@@ -165,14 +165,14 @@ app.post("/scrape", function(req, res) {
                             var count = parseInt(csGrades[0].colspan, 10);
                             
                             //Loop through the row getting the properties
-                            for(i = 0; i < row.children.length - 2; i++) {
+                            for(i = 0; i < columns; i++) {
                                 if(count == 0) {
                                     j++;
                                     count = parseInt(csGrades[j].colspan, 10);
                                 }
                                 var propName = td.text();
                                 var propValue = targetTd.text();
-                                if(limitTd.text() != "&nbsp;") {
+                                if(limitTd.text() != String.fromCharCode(160)) {
                                     propValue+= " / " + limitTd.text();
                                 }
                                 csGrades[j][propName] = propValue;
@@ -209,8 +209,6 @@ app.post("/scrape", function(req, res) {
                         });
                         
                         table.filter(function(){
-                            //Set this as table
-                            var table = $(this);
                             //Get the first row of that table
                             var row = table.children().first();
                             //Keep track of the number of categories
@@ -224,8 +222,8 @@ app.post("/scrape", function(req, res) {
                                 //Create the grade object and push it to the
                                 //csGrades array
                                 var grade = {
-                                    name: td.text(),
-                                    colspan: td.attr('colspan')
+                                    colspan: td.attr('colspan'),
+                                    name: td.text()
                                 };
                                 asGrades.push(grade);
                                 td = td.next();
@@ -249,6 +247,8 @@ app.post("/scrape", function(req, res) {
                             //Get row containing limits
                             var limitsRow = row.next();
                             
+                            var columns = row.children().length - 2;
+                            
                             //Td holding the property name
                             td = row.children().first().next().next();
                             //Tds holding property value
@@ -259,20 +259,27 @@ app.post("/scrape", function(req, res) {
                             var j = 0;
                             var count = parseInt(asGrades[0].colspan, 10);
                             
+                            
                             //Loop through the row getting the properties
-                            for(i = 0; i < row.children.length - 2; i++) {
+                            for(i = 0; i < columns; i++) {
                                 if(count == 0) {
                                     j++;
                                     count = parseInt(asGrades[j].colspan, 10);
                                 }
                                 var propName = td.text();
                                 var propValue = targetTd.text();
-                                if(limitTd.text() != "&nbsp;") {
+                                if(limitTd.text() != String.fromCharCode(160)) {
                                     propValue+= " / " + limitTd.text();
                                 }
                                 asGrades[j][propName] = propValue;
+                                console.log("Property name is " + propName);
+                                console.log("Property value is " + propValue);
+                                td = td.next();
+                                limitTd = limitTd.next();
+                                targetTd = targetTd.next();
                                 count--;
                             }
+                            
                             
                         }); /* end of filter */
                         
