@@ -7,11 +7,15 @@
             <div class="col-md-4 col-sm-6">
                 <div class="thumbnail">
                     <h3>For <%= grade.name %>:</h3>
-                    <p>Rank: <%= grade.rank %></p>
-                    <% if(grade.points != "") { %>
-                     <p>Points: <%= grade.points %></p>
+                    <% if(grade.hasOwnProperty("Rank")) { %>
+                        <p>Rank: <%=grade.Rank%></p>
                     <% } %>
-                    <p>Score: <%= grade.score %></p>
+                    <% if(grade.hasOwnProperty("Points")) { %>
+                        <p>Points: <%=grade.Points%></p>
+                    <% } %>
+                    <% if(grade.hasOwnProperty("Score")) { %>
+                        <p>Score: <%=grade.Score%></p>
+                    <% } %>
                 </div>
             </div>
         <% }); %>

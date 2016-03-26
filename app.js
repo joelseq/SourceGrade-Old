@@ -176,6 +176,9 @@ app.post("/scrape", function(req, res) {
                                     propValue+= " / " + limitTd.text();
                                 }
                                 csGrades[j][propName] = propValue;
+                                td = td.next();
+                                limitTd = limitTd.next();
+                                targetTd = targetTd.next();
                                 count--;
                             }
                             
@@ -272,8 +275,6 @@ app.post("/scrape", function(req, res) {
                                     propValue+= " / " + limitTd.text();
                                 }
                                 asGrades[j][propName] = propValue;
-                                console.log("Property name is " + propName);
-                                console.log("Property value is " + propValue);
                                 td = td.next();
                                 limitTd = limitTd.next();
                                 targetTd = targetTd.next();
