@@ -91,90 +91,6 @@ app.post("/scrape", function(req, res) {
                     });
                     
                     asLink = anchor;
-                    
-                    
-                    
-                    // //For each anchor get the href
-                    // anchors.each(function(i, elem){
-                    //   var ahref = $(this).attr("href");
-                    //   var catUrl = baseUrl + ahref;
-                    //   //Create grade object for that specific anchor
-                    //   var grade = {
-                    //       name: $(this).text(),
-                    //       url: catUrl,
-                    //       rank: "",
-                    //       points: "",
-                    //       score: ""
-                    //   };
-                    //   grades.push(grade);
-                    //   asyncTasks.push(function(done){
-                    //       request(grade.url, function(error,response,html){
-                    //           if(error){
-                    //                 res.render("error");
-                    //                 console.log(error);
-                    //             } else {
-                    //                 var $ = cheerio.load(html);
-                                    
-                    //                 //Filter out the table containing the scores
-                    //                 $('table').attr('cellpadding', '3').filter(function(){
-                    //                     //Set this as table
-                    //                     var table = $(this);
-                    //                     //Get the first row of that table
-                    //                     var row = table.children().first();
-                    //                     //Loop through all the rows to find the row containing the ID
-                    //                     for(var i = 0; i < table.children().length; i++){
-                    //                         if(row.children().first().text() === id){
-                    //                             var index;
-                    //                             var items = [];
-                    //                             var child = row.children().first();
-                    //                             //Loop through the children of the row
-                    //                             //to find the highlighted ones
-                    //                             for(var j = 0; j < row.children().length; j++) {
-                    //                                 if(child.attr('bgcolor') === '#FFFFD0') {
-                    //                                     index = j;
-                    //                                     items.push(child.text());
-                    //                                 }
-                    //                                 child = child.next();
-                    //                             }
-                    //                             //If 3 items, there is rank, points, and score
-                    //                             if(items.length === 3) {
-                    //                                 grade.rank = items[0];
-                    //                                 grade.points = items[1];
-                    //                                 grade.score = items[2];
-                    //                                 //Get to the 3rd row
-                    //                                 var mainRow = table.children().eq(2);
-                    //                                 var pointsColumn = mainRow.children().eq(index-1);
-                    //                                 grade.points+=" / " + pointsColumn.text();
-                    //                                 var scoreColumn = mainRow.children().eq(index);
-                    //                                 grade.score+="/" + scoreColumn.text();
-                    //                             } else {
-                    //                                 grade.rank = items[0];
-                    //                                 grade.score = items[1];
-                    //                                 var mainRow = table.children().eq(2);
-                    //                                 var scoreColumn = mainRow.children().eq(index);
-                    //                                 grade.score+= " / " + scoreColumn.text();
-                    //                             }
-                    //                             //Exit out of loop
-                    //                             break;
-                                                
-                    //                         } else {
-                    //                             row = row.next();
-                    //                         }
-                    //                     } /* end of for loop */
-                                        
-                                        
-                    //                 }); /* end of filter */
-                                    
-                                    
-                    //             } /* end of else */
-                    //          done();
-                    //       }, function(err){
-                    //               if(err){
-                    //                   console.log(err);
-                    //               }
-                    //     });
-                    //   });
-                    // }); /* end of for each */
                 
               }); /* end of filter */
               
@@ -188,13 +104,20 @@ app.post("/scrape", function(req, res) {
                     } else {
                         var $ = cheerio.load(html);
                         //Filter out the table containing the scores
-                        $('table').attr('cellpadding', '3').filter(function(){
+                        var tables = $('table');
+              
+                        var table;
+                          
+                        tables.each(function() {
+                          if($(this).attr("cellpadding", "3"))
+                            table = $(this);
+                        });
+                        
+                        table.filter(function(){
                             //Set this as table
                             var table = $(this);
                             //Get the first row of that table
                             var row = table.children().first();
-                            console.log("" + row);
-                            console.log("The number of children of the row is: " + row.children().length);
                             //Keep track of the number of categories
                             var categories = row.children().length - 2;
                             //Start from the 3rd td in that row
@@ -276,7 +199,16 @@ app.post("/scrape", function(req, res) {
                     } else {
                         var $ = cheerio.load(html);
                         //Filter out the table containing the scores
-                        $('table').attr('cellpadding', '3').filter(function(){
+                        var tables = $('table');
+              
+                        var table;
+                          
+                        tables.each(function() {
+                          if($(this).attr("cellpadding", "3"))
+                            table = $(this);
+                        });
+                        
+                        table.filter(function(){
                             //Set this as table
                             var table = $(this);
                             //Get the first row of that table
