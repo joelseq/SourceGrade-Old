@@ -38,8 +38,7 @@ app.post("/scrape", function(req, res) {
    var csGrades = [];
    var asGrades = [];
    
-   //Array of urls
-   var urls = [];
+   var coursestand, asLink;
    
    //Array of async functions
    var asyncTasks = [];
@@ -68,8 +67,7 @@ app.post("/scrape", function(req, res) {
                     table = $(this);
               });
               
-              var coursestand = baseUrl + "coursestand.html";
-              urls.push(coursestand);
+              coursestand = baseUrl + "coursestand.html";
               
               //Filter out the table to reach the anchor tags
               table.filter(function(){
@@ -92,7 +90,7 @@ app.post("/scrape", function(req, res) {
                         }
                     });
                     
-                    urls.push(anchor);
+                    asLink = anchor;
                     
                     
                     
@@ -183,7 +181,7 @@ app.post("/scrape", function(req, res) {
             
             //Add the request for the categories url
             asyncTasks.push(function(done){
-                request(urls[0], function(error,response,html){
+                request(coursestand, function(error,response,html){
                     if(error){
                         res.render("error");
                         console.log(error);
@@ -271,7 +269,7 @@ app.post("/scrape", function(req, res) {
             
             //Add the request to the assessments url
             asyncTasks.push(function(done){
-                request(urls[1], function(error,response,html){
+                request(asLink, function(error,response,html){
                     if(error){
                         res.render("error");
                         console.log(error);
