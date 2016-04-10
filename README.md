@@ -1,6 +1,6 @@
 # SourceGrade - better than CTRL+F
 
-SourceGrade is an app for [GradeSource](http://www.gradesource.com/). It is an
+[SourceGrade](https://sourcegrade.herokuapp.com/) is an app for [GradeSource](http://www.gradesource.com/). It is an
 app designed to make your life easier by finding all of your grades for a
 particular course.
 
