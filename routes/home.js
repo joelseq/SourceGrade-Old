@@ -13,7 +13,12 @@ function replaceUrl(i, url) {
 
 
 router.get("/", function(req,res) {
-  res.render("home");
+  res.render("landing");
+});
+
+//TODO Plan out how to implement the home page of the user
+router.get("/home", function(req,res) {
+  res.render("/home");
 });
 
 router.get("/scrape", function(req,res) {
