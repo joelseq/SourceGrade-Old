@@ -4,12 +4,12 @@
 <div id="main-form" class="container" style="width: 50%;text-align: center; margin: 25px auto">
     <h1 id="head">Welcome To SourceGrade!</h1>
     <h3 id="slogan">better than CTRL+F</h3>
-    <form action="/scrape" method="POST">
+    <form action="/scrape" method="GET">
         <div class="form-group">
-            <input class="form-control" type="text" id="userid" name="sourceid" placeholder="Gradesource ID">
+            <input class="form-control" type="text" id="userid" name="id" placeholder="Gradesource ID">
         </div>
         <div class="form-group">
-            <input class="form-control" type="text" id="userurl" name="sourceurl" placeholder="Gradesource overall course URL">
+            <input class="form-control" type="url" id="userurl" name="url" placeholder="Gradesource overall course URL">
         </div>
         <div class="form-group">
             <button class="btn btn-primary btn-large btn-block">Submit</button>
@@ -17,20 +17,4 @@
     </form>
 </div>
 
-<script>
-    //Function to get values from query strings
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
-    
-    var url = getParameterByName("CSE110URL");
-    document.getElementById("userurl").value = url;
-</script>
-    
 <% include partials/footer %>
