@@ -10,6 +10,12 @@ router.post("/class", function(req,res) {
       return res.render("/");
     }
     req.user.classes.push(created);
+    req.user.save(function(err) {
+      if (err) {
+        console.log(err);
+        return res.render("/");
+      }
+    });
     return res.redirect("/home");
   });
 });
