@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'),
+      passport = require('passport'),
       express  = require('express'),
       async    = require('async'),
       request  = require('request'), //Gets URL passed in and turns it into html
@@ -18,7 +19,7 @@ router.get("/", function(req,res) {
 
 //TODO Plan out how to implement the home page of the user
 router.get("/home", function(req,res) {
-  res.render("/home");
+  res.render("home");
 });
 
 router.get("/scrape", function(req,res) {
@@ -189,8 +190,8 @@ router.get("/scrape", function(req,res) {
         asyncTasks.push(function(done){
           request(asLink, function(error,response,html){
             if(error){
-              res.render("error");
               console.log(error);
+              return res.render("error");
             } else {
               var $ = cheerio.load(html);
               //Filter out the table containing the scores
@@ -296,6 +297,7 @@ router.get("/scrape", function(req,res) {
           } else {
             // All tasks are done now
             console.log("Done parsing grades");
+            csGrades.reverse();
             grades = csGrades.concat(asGrades);
             res.render("scrape",{grades: grades});
           }

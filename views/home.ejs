@@ -1,0 +1,20 @@
+<% include ./partials/header.ejs %>
+
+<div class="container pad-top">
+
+    <% if(currentUser) { %>
+        <a class="btn btn-large btn-primary" href="/class/new">New Class</a>
+        <h1>Classes: </h1>
+        <div class="row">
+        <% currentUser.classes.forEach(function(foundClass) { %>
+            <div class="col-md-4 col-sm-6">
+                <a href="/scrape?id=<%=foundClass.courseId%>&url=<%=foundClass.courseUrl%>">
+                    <div class="thumbnail"><h3><%= foundClass.name %></h3></div>
+                </a>
+            </div>
+        <% }); %>
+    <% } %>
+    </div>
+</div>
+
+<% include ./partials/footer.ejs %>

@@ -1,7 +1,8 @@
-const express = require('express'),
-      passport = require('passport'),
-      User     = require('../models/user'),
-      router   = express.Router();
+const express   = require('express'),
+      passport  = require('passport'),
+      User      = require('../models/user'),
+      sanitizer = require('express-sanitizer'),
+      router    = express.Router();
 
 router.get("/login", function(req,res) {
   res.render("login");
@@ -24,7 +25,7 @@ router.post("/signup", function(req,res) {
   User.register(newUser, req.body.password, function(err, user) {
     if(err) {
       console.log(err);
-      return res.render("/signup");
+      return res.redirect("/signup");
     }
     passport.authenticate("local")(req,res, function(){
       res.redirect("/home");
