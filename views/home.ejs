@@ -20,20 +20,4 @@
     </div>
 </div>
 
-<script>
-    //Function to get values from query strings
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
-
-    var url = getParameterByName("CSE110URL");
-    document.getElementById("userurl").value = url;
-</script>
-
 <% include ./partials/footer.ejs %>
