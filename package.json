@@ -4,7 +4,8 @@
   "description": "A better way to get your grades from gradesource",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "build": "npm install"
   },
   "author": "Joel Sequeira",
   "license": "ISC",
