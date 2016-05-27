@@ -36,7 +36,7 @@ router.put("/class/:id", function(req,res) {
     courseUrl: req.body.url,
     user: req.user._id
   };
-  Class.findById(req.params.id, newClass, function(err, updatedClass) {
+  Class.findByIdAndUpdate(req.params.id, newClass, function(err, updatedClass) {
     if(err) {
       res.redirect("/");
     } else {
