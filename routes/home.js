@@ -318,5 +318,13 @@ router.get("/scrape", function(req,res) {
   }); /* end of request */
 });
 
+router.get("/404", function(req,res) {
+  res.render("404");
+});
+
+router.get("*", function(req,res) {
+  res.redirect("/404");
+});
+
 module.exports = router;
 

@@ -38,14 +38,14 @@ html, body {
     width: 50%;
     min-width: 200px;
     text-align: center;
-    margin: 25px auto;
+    margin: 15% auto;
 }
 
 .auth-form {
     width: 50%;
     min-width: 200px;
     text-align: center;
-    margin: 100px auto;
+    margin: 15% auto;
 }
 
 .pad-top {
@@ -54,4 +54,25 @@ html, body {
 
 #delete-form {
     display: inline;
+}
+
+.error-text {
+    text-align: center;
+    width: 60%;
+    margin-top: 15%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.error-text>a {
+    color: darkblue;
+}
+
+.top-nav {
+    background: #337ab7;
+    border: 0px;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav>li>a {
+    color: white;
 }
