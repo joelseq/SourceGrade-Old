@@ -18,8 +18,10 @@ router.get("/", function(req,res) {
   res.render("landing");
 });
 
-//TODO Plan out how to implement the home page of the user
 router.get("/home", function(req,res) {
+  if(!req.user) {
+    return res.redirect("/");
+  }
   Class.find({user: req.user._id}, function(err, classes) {
     if(err) {
       return res.redirect("/home");
