@@ -2,6 +2,7 @@ const mongoose = require('mongoose'),
       passport = require('passport'),
       express  = require('express'),
       async    = require('async'),
+      Class    = require('../models/class'),
       request  = require('request'), //Gets URL passed in and turns it into html
       cheerio  = require('cheerio'), //To select HTML elements like jQuery
       router   = express.Router();
@@ -19,7 +20,13 @@ router.get("/", function(req,res) {
 
 //TODO Plan out how to implement the home page of the user
 router.get("/home", function(req,res) {
-  res.render("home");
+  Class.find({user: req.user._id}, function(err, classes) {
+    if(err) {
+      return res.redirect("/home");
+    } else {
+      res.render("home", {classes: classes});
+    }
+  });
 });
 
 router.get("/scrape", function(req,res) {

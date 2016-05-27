@@ -1,16 +1,17 @@
 <% include ./partials/header.ejs %>
 
 <div class="container pad-top">
-
-    <% if(currentUser) { %>
-        <a class="btn btn-large btn-primary" href="/class/new">New Class</a>
+    <a class="btn btn-large btn-primary" href="/class/new">New Class</a>
+    <% if(classes) { %>
         <h1>Classes: </h1>
         <div class="row">
-        <% currentUser.classes.forEach(function(foundClass) { %>
-            <div class="col-md-4 col-sm-6">
+        <% classes.forEach(function(foundClass) { %>
+            <div class="col-md-4 col-sm-6 thumbnail">
                 <a href="/scrape?id=<%=foundClass.courseId%>&url=<%=foundClass.courseUrl%>">
-                    <div class="thumbnail"><h3><%= foundClass.name %></h3></div>
+                    <h3><%= foundClass.name %></h3>
                 </a>
+                <a class="btn btn-warning" href="/class/<%=foundClass._id%>/edit">Edit</a>
+                <a class="btn btn-danger" href="/class/<%=foundClass._id%>?_method=DELETE">Delete</a>
             </div>
         <% }); %>
     <% } %>

@@ -4,19 +4,14 @@ const express   = require('express'),
       Class     = require('../models/class');
 
 router.post("/class", function(req,res) {
+  req.body.newClass.user = req.user._id;
+
   Class.create(req.body.newClass, function(err, created) {
     if(err) {
       console.log(err);
       return res.render("/");
     }
-    req.user.classes.push(created);
-    req.user.save(function(err) {
-      if (err) {
-        console.log(err);
-        return res.render("/");
-      }
-    });
-    return res.redirect("/home");
+    res.redirect("/home");
   });
 });
 
@@ -28,9 +23,9 @@ router.get("/class/:id/edit", function(req,res) {
   Class.findById(req.params.id, function(err, foundClass) {
     if(err) {
       console.log(err);
-      return res.render("/");
+      return res.redirect("/");
     }
-    res.render("edit-class", {foundClass: foundClass});
+    res.render("edit-class", {found: foundClass});
   });
 });
 
@@ -38,7 +33,8 @@ router.put("/class/:id", function(req,res) {
   var newClass = {
     name: req.body.name,
     courseId: req.body.id,
-    courseUrl: req.body.url
+    courseUrl: req.body.url,
+    user: req.user._id
   };
   Class.findById(req.params.id, newClass, function(err, updatedClass) {
     if(err) {
