@@ -305,7 +305,6 @@ router.get("/scrape", function(req,res) {
             console.log(err);
           } else {
             // All tasks are done now
-            console.log("Done parsing grades");
             csGrades.reverse();
             grades = csGrades.concat(asGrades);
             res.render("scrape",{grades: grades});

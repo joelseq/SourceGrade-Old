@@ -6,14 +6,16 @@
         <h1>Classes: </h1>
         <div class="row">
         <% classes.forEach(function(foundClass) { %>
-            <div class="col-md-4 col-sm-6 thumbnail">
-                <a href="/scrape?id=<%=foundClass.courseId%>&url=<%=foundClass.courseUrl%>">
-                    <h3><%= foundClass.name %></h3>
-                </a>
-                <a class="btn btn-warning" href="/class/<%=foundClass._id%>/edit">Edit</a>
-                <form id="delete-form" action="/class/<%=foundClass._id%>?_method=DELETE" method="POST">
-                    <button class="btn btn-danger">Delete</button>
-                </form>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="thumbnail">
+                    <a href="/scrape?id=<%=foundClass.courseId%>&url=<%=foundClass.courseUrl%>">
+                        <h3><%= foundClass.name %></h3>
+                    </a>
+                    <a class="btn btn-warning" href="/class/<%=foundClass._id%>/edit">Edit</a>
+                    <form id="delete-form" action="/class/<%=foundClass._id%>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
             </div>
         <% }); %>
     <% } %>
